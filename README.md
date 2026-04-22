@@ -2,6 +2,10 @@
 
 This project detects human pose keypoints, builds limb-focused Gaussian masks, and classifies limb condition using CLIP with optional LoRA weights.
 
+## Preview
+
+![Batch report preview](Results/batch_reports/001_report.jpg)
+
 ## What This Repo Contains
 
 - `pose_gaussian_only.py`: pose + limb Gaussian masking for one image.
