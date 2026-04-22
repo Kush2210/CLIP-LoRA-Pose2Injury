@@ -1,0 +1,9 @@
+certifi
+gdown
+matplotlib
+numpy
+opencv-python
+Pillow
+torch
+torchsummary
+ultralytics

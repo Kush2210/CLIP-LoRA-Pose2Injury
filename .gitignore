@@ -1,0 +1,29 @@
+# Python bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Jupyter
+.ipynb_checkpoints/
+*.nbconvert.ipynb
+*.executed.ipynb
+
+# OS files
+.DS_Store
+
+# Build / test artifacts
+
+run*_output.txt
+
+
+# Logs
+*.log
+
+# Editor settings
+.vscode/
+.idea/
