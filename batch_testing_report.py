@@ -44,7 +44,7 @@ SKELETON_PAIRS = [
     (11, 13), (13, 15), (12, 14), (14, 16),
 ]
 
-CLASS_NAMES = ["injury", "no_injury", "injury_and_amputation"]
+CLASS_NAMES = ["injury", "no_injury"]
 PROMPT_TEMPLATES = [
     "For the highlighted limb {} is present.",
     "The limb condition is {}.",
@@ -139,9 +139,8 @@ def summarize_probs(probs_clip: np.ndarray, probs_lora: np.ndarray):
 
     injury_idx = CLASS_NAMES.index("injury")
     no_injury_idx = CLASS_NAMES.index("no_injury")
-    amp_idx = CLASS_NAMES.index("injury_and_amputation")
 
-    injury_score = float(probs_combined[injury_idx] + probs_combined[amp_idx])
+    injury_score = float(probs_combined[injury_idx])
     no_injury_prob = float(probs_combined[no_injury_idx])
     pred_binary = "injury" if injury_score >= INJURY_SCORE_THRESHOLD else "no_injury"
 
@@ -152,15 +151,12 @@ def summarize_probs(probs_clip: np.ndarray, probs_lora: np.ndarray):
         "injury_margin": injury_score - no_injury_prob,
         "injury_prob": float(probs_combined[injury_idx]),
         "no_injury_prob": no_injury_prob,
-        "injury_and_amputation_prob": float(probs_combined[amp_idx]),
         "clip_injury_prob": float(probs_clip[injury_idx]),
         "clip_no_injury_prob": float(probs_clip[no_injury_idx]),
-        "clip_injury_and_amputation_prob": float(probs_clip[amp_idx]),
-        "clip_injury_score": float(probs_clip[injury_idx] + probs_clip[amp_idx]),
+        "clip_injury_score": float(probs_clip[injury_idx]),
         "lora_injury_prob": float(probs_lora[injury_idx]),
         "lora_no_injury_prob": float(probs_lora[no_injury_idx]),
-        "lora_injury_and_amputation_prob": float(probs_lora[amp_idx]),
-        "lora_injury_score": float(probs_lora[injury_idx] + probs_lora[amp_idx]),
+        "lora_injury_score": float(probs_lora[injury_idx]),
     }
 
 
@@ -377,15 +373,12 @@ def main():
                 "pred_binary",
                 "injury_prob",
                 "no_injury_prob",
-                "injury_and_amputation_prob",
                 "injury_score",
                 "clip_injury_prob",
                 "clip_no_injury_prob",
-                "clip_injury_and_amputation_prob",
                 "clip_injury_score",
                 "lora_injury_prob",
                 "lora_no_injury_prob",
-                "lora_injury_and_amputation_prob",
                 "lora_injury_score",
                 "mask_path",
             ],
@@ -401,15 +394,12 @@ def main():
                         "pred_binary": part["pred_binary"],
                         "injury_prob": f"{part['injury_prob']:.8f}",
                         "no_injury_prob": f"{part['no_injury_prob']:.8f}",
-                        "injury_and_amputation_prob": f"{part['injury_and_amputation_prob']:.8f}",
                         "injury_score": f"{part['injury_score']:.8f}",
                         "clip_injury_prob": f"{part['clip_injury_prob']:.8f}",
                         "clip_no_injury_prob": f"{part['clip_no_injury_prob']:.8f}",
-                        "clip_injury_and_amputation_prob": f"{part['clip_injury_and_amputation_prob']:.8f}",
                         "clip_injury_score": f"{part['clip_injury_score']:.8f}",
                         "lora_injury_prob": f"{part['lora_injury_prob']:.8f}",
                         "lora_no_injury_prob": f"{part['lora_no_injury_prob']:.8f}",
-                        "lora_injury_and_amputation_prob": f"{part['lora_injury_and_amputation_prob']:.8f}",
                         "lora_injury_score": f"{part['lora_injury_score']:.8f}",
                         "mask_path": part["mask_path"],
                     }

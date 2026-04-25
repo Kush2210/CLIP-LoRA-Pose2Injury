@@ -1,6 +1,7 @@
 import argparse
 import json
 from types import SimpleNamespace
+from pathlib import Path
 
 import torch
 from PIL import Image
@@ -8,6 +9,14 @@ from PIL import Image
 import clip
 from datasets.tromnet import imagenet_classes, imagenet_templates
 from loralib.utils import apply_lora, load_lora
+
+CLIP_DEFAULT_WEIGHTS = Path(__file__).resolve().parent / "weights" / "ViT-B-16.pt"
+
+
+def resolve_clip_backbone(backbone: str) -> str:
+    if backbone == "ViT-B/16" and CLIP_DEFAULT_WEIGHTS.exists():
+        return str(CLIP_DEFAULT_WEIGHTS)
+    return backbone
 
 
 def build_text_features(clip_model, device, class_names, prompt_template):
@@ -42,7 +51,7 @@ def main():
         "--class_names",
         nargs="+",
         default=None,
-        help="Space-separated class names (default: injury no_injury injury_and_amputation)",
+        help="Space-separated class names (default: injury no_injury)",
     )
     parser.add_argument(
         "--prompt_template",
@@ -68,7 +77,7 @@ def main():
     args = parser.parse_args()
 
     device = "cuda" if torch.cuda.is_available() else "cpu"
-    clip_model, preprocess = clip.load(args.backbone, device=device)
+    clip_model, preprocess = clip.load(resolve_clip_backbone(args.backbone), device=device)
     clip_model.eval()
 
     class_names = args.class_names if args.class_names else imagenet_classes

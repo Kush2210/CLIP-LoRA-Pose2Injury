@@ -11,7 +11,7 @@ import torchvision.datasets as datasets
 import torchvision.datasets as datasets
 
 
-imagenet_classes = ["injury", "no_injury", "injury_and_amputation"]
+imagenet_classes = ["injury", "no_injury"]
 imagenet_templates = ["For the highlighted limb {} is present."]
 
 class trom_net():

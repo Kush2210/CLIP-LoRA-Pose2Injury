@@ -12,6 +12,9 @@ This project detects human pose keypoints, builds limb-focused Gaussian masks, a
 - `run_pose_then_clip.py`: end-to-end single-image pipeline (masking -> CLIP/LoRA classification).
 - `batch_testing_report.py`: batch report generator with visualization grids and CSV outputs.
 - `cv_project_usage.ipynb`: step-by-step notebook demo for the same pipeline.
+- `notebooks/01_base_clip_limb_status.ipynb`: base CLIP limb-status notebook.
+- `notebooks/02_yolo_pose_limb_crops_clip.ipynb`: pose + Gaussian masking with base CLIP.
+- `notebooks/03_yolo_gaussian_lora_clip.ipynb`: pose + Gaussian masking with CLIP + LoRA and the compact limb table.
 - `CLIP-LoRA/`: CLIP-LoRA training/inference code and dataset adapters.
 - `testing/`: sample test images.
 
@@ -27,6 +30,7 @@ pip install -r requirements.txt
 ## Model Files
 
 - Pose model default: `yolov8n-pose.pt`
+- Base CLIP weights are pulled from the web on first run and cached in `~/.cache/clip/`.
 - LoRA checkpoint example: `CLIP-LoRA/weights/lora_weights_960_2.9566854533582632e-05.pt`
 
 Notes:
@@ -40,7 +44,6 @@ Default class order:
 
 1. `injury`
 2. `no_injury`
-3. `injury_and_amputation`
 
 The project uses prompt-based CLIP text features. The notebook and batch script currently use prompt ensembling for better stability.
 
@@ -81,6 +84,31 @@ Outputs are written to:
 - `Results/batch_reports/*.jpg`
 - `Results/batch_reports/summary.csv`
 - `Results/batch_reports/part_probabilities.csv`
+- `Results/batch_reports/proof_panels/*_proof_panel.png`
+- `Results/batch_reports/run_metadata.json`
+
+### 4) Teacher-facing metrics + plots
+
+Prepare/update labels in `testing_labels.csv` (`image,true_label`) and run:
+
+```bash
+python evaluate_teacher_metrics.py \
+  --summary_csv Results/batch_reports/summary.csv \
+  --labels_csv testing_labels.csv \
+  --output_dir Results/report_assets_positive
+```
+
+Outputs are written to:
+
+- `Results/report_assets_positive/metrics_summary.json`
+- `Results/report_assets_positive/metrics_table.csv`
+- `Results/report_assets_positive/confusion_matrix.png`
+- `Results/report_assets_positive/roc_ovr.png`
+- `Results/report_assets_positive/class_distribution.png`
+- `Results/report_assets_positive/metrics_bar.png`
+- `Results/report_assets_positive/sample_group_panel.png`
+- `Results/report_assets_positive/sample_predictions.png`
+- `PRESENTATION_EVIDENCE_CHECKLIST.md`
 
 ## Notebook
 
@@ -92,9 +120,18 @@ Run `cv_project_usage.ipynb` for an interactive walkthrough:
 - CLIP + LoRA probability tables
 - image-level injury summary
 
+The focused notebook variants in `notebooks/` show the same pipeline in smaller pieces:
+
+- `01_base_clip_limb_status.ipynb` uses a simple base-CLIP table.
+- `02_yolo_pose_limb_crops_clip.ipynb` shows pose-guided crops with the five-column limb table.
+- `03_yolo_gaussian_lora_clip.ipynb` shows the Gaussian + CLIP-LoRA flow with the same five-column table:
+  `Limb`, `Predicted Class`, `Binary Label`, `Injury Score`, `No-Injury Prob`.
+
 ## Submission Notes
 
 This repo includes `.gitignore` for generated artifacts (`Results/`, `__pycache__/`, notebook checkpoints, etc.) so reruns do not pollute source control.
+
+Generated notebook outputs such as `notebooks/generated_outputs/` and report assets under `Results/` are reproducible and can be regenerated at any time.
 
 For final submission, keep source files and sample inputs; generated outputs are optional unless explicitly requested by your course.
 

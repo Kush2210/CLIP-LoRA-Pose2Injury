@@ -129,6 +129,7 @@ Inference flow used for reporting:
 1. Run pose + Gaussian segmentation.
 2. Run CLIP/CLIP-LoRA single-image prediction.
 3. Collect visual artifacts and output JSON for reporting.
+4. Notebook evidence is also recorded in `notebooks/01_base_clip_limb_status.ipynb`, `notebooks/02_yolo_pose_limb_crops_clip.ipynb`, and `notebooks/03_yolo_gaussian_lora_clip.ipynb`.
 
 Training status:
 - No new classifier training was performed in this report.
@@ -186,7 +187,7 @@ Note:
 ![Sample Group Panel](Results/report_assets_positive/sample_group_panel.png)
 
 #### Additional Prediction Plot
-![Sample Predictions](Results/report_assets/sample_predictions.png)
+![Sample Predictions](Results/report_assets_positive/sample_predictions.png)
 
 ### 7.3 Additional Technical Table: Module-wise Inputs/Outputs
 
@@ -207,12 +208,14 @@ This section lists evidence screenshots/visual outputs available in the workspac
 - Additional splatted frame: Results/splatted_frame_0028.jpg
 - CLIP few-shot visual artifact: CLIP-LoRA/few_shot.png
 - Full report plots: Results/report_assets_positive/*.png
+- Notebook 03 limb table output: `notebooks/03_yolo_gaussian_lora_clip.ipynb` with columns `Limb`, `Predicted Class`, `Binary Label`, `Injury Score`, `No-Injury Prob`
 
 ### 8.2 Recommended Program Proof Captures
 Capture and include screenshots for final submission from:
 - Pose + keypoint code: pose_gaussian_only.py
 - End-to-end script: run_pose_then_clip.py
 - CLIP-LoRA inference code: CLIP-LoRA/infer_single_wound.py
+- Notebook 03 table output: notebooks/03_yolo_gaussian_lora_clip.ipynb
 - Metrics JSON output: Results/report_assets_positive/metrics_summary.json
 - Terminal run logs for prediction/evaluation commands
 

@@ -9,12 +9,22 @@ from PIL import Image
 import cv2
 # from dataset import trom_net
 import time
+from pathlib import Path
+
+
+CLIP_DEFAULT_WEIGHTS = Path(__file__).resolve().parent / "weights" / "ViT-B-16.pt"
+
+
+def resolve_clip_backbone(backbone: str) -> str:
+    if backbone == "ViT-B/16" and CLIP_DEFAULT_WEIGHTS.exists():
+        return str(CLIP_DEFAULT_WEIGHTS)
+    return backbone
 
 def main():
     args = get_arguments()
     set_random_seed(args.seed)
     
-    clip_model,_ = clip.load(args.backbone)
+    clip_model,_ = clip.load(resolve_clip_backbone(args.backbone))
     clip_model.eval()
     logit_scale = 100
     # print(clip_model)
