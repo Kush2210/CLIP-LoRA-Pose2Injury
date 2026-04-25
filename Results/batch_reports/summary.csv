@@ -1,0 +1,13 @@
+image,final_label,output_path
+001.png,injury,/Users/kushgarg/Desktop/Programs/cv_project/Results/batch_reports/001_report.jpg
+002.png,injury,/Users/kushgarg/Desktop/Programs/cv_project/Results/batch_reports/002_report.jpg
+003.png,injury,/Users/kushgarg/Desktop/Programs/cv_project/Results/batch_reports/003_report.jpg
+004.png,no_injury,/Users/kushgarg/Desktop/Programs/cv_project/Results/batch_reports/004_report.jpg
+005.png,no_injury,/Users/kushgarg/Desktop/Programs/cv_project/Results/batch_reports/005_report.jpg
+006.png,no_injury,/Users/kushgarg/Desktop/Programs/cv_project/Results/batch_reports/006_report.jpg
+007.png,injury,/Users/kushgarg/Desktop/Programs/cv_project/Results/batch_reports/007_report.jpg
+008.png,injury,/Users/kushgarg/Desktop/Programs/cv_project/Results/batch_reports/008_report.jpg
+009.png,injury,/Users/kushgarg/Desktop/Programs/cv_project/Results/batch_reports/009_report.jpg
+010.png,no_injury,/Users/kushgarg/Desktop/Programs/cv_project/Results/batch_reports/010_report.jpg
+011.png,no_injury,/Users/kushgarg/Desktop/Programs/cv_project/Results/batch_reports/011_report.jpg
+012.png,no_injury,/Users/kushgarg/Desktop/Programs/cv_project/Results/batch_reports/012_report.jpg

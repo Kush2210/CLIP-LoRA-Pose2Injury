@@ -199,6 +199,7 @@ def overlay_keypoints(image_rgb: np.ndarray, person_kpts: np.ndarray):
 
 def make_image_report(
     img_path: Path,
+    gt_parts: dict,
     pose_model,
     clip_model_lora,
     preprocess_lora,
@@ -258,17 +259,20 @@ def make_image_report(
         mask = cv2.inRange(splatted, np.array([1, 1, 1]), np.array([255, 255, 255]))
         masked = cv2.bitwise_and(image_bgr, image_bgr, mask=mask)
 
-        mask_path = mask_dir / f"{img_path.stem}_{part_name}.jpg"
+        mask_path = mask_dir / f"{img_path.stem}_{part_name}_gaussian_mask.png"
         cv2.imwrite(str(mask_path), masked)
 
         probs_lora = predict_probs(mask_path, clip_model_lora, preprocess_lora, text_features_lora, device)
         pred = summarize_probs(probs_lora)
-        limb_results.append({"part": part_name, **pred, "mask_path": str(mask_path)})
+        gt_part_name = normalize_limb_name(part_name)
+        gt_label = gt_parts.get(gt_part_name, "no_injury")
+        limb_results.append({"part": part_name, "ground_truth": gt_label, **pred, "mask_path": str(mask_path)})
 
         ax.imshow(cv2.cvtColor(masked, cv2.COLOR_BGR2RGB))
+        gt_binary = "injury" if gt_label == "injury" else "no_injury"
         color = "crimson" if pred["pred_binary"] == "injury" else "green"
         ax.set_title(
-            f"{part_name}: {pred['pred_binary']}\n"
+            f"{part_name}\nGT: {gt_binary} | Pred: {pred['pred_binary']}\n"
             f"injury_score={pred['injury_score']:.4f}, no_injury_prob={pred['no_injury_prob']:.4f}",
             fontsize=10,
             color=color,
@@ -276,9 +280,10 @@ def make_image_report(
         ax.axis("off")
 
     final_label = "injury" if any(item["pred_binary"] == "injury" for item in limb_results) else "no_injury"
+    final_gt_label = "injury" if any(value == "injury" for value in gt_parts.values()) else "no_injury"
     max_injury_score = max((item["injury_score"] for item in limb_results), default=0.0)
     fig.suptitle(
-        f"{img_path.name} | final: {final_label} | max injury score: {max_injury_score:.4f}",
+        f"{img_path.name} | GT: {final_gt_label} | Pred: {final_label} | max injury score: {max_injury_score:.4f}",
         fontsize=16,
         color="crimson" if final_label == "injury" else "green",
     )
@@ -337,8 +342,12 @@ def main():
 
     summary_rows = []
     for img_path in image_paths:
+        gt_parts = gt_map.get(img_path.name)
+        if gt_parts is None:
+            raise RuntimeError(f"Missing ground-truth row for {img_path.name}")
         result = make_image_report(
             img_path=img_path,
+            gt_parts=gt_parts,
             pose_model=pose_model,
             clip_model_lora=clip_model_lora,
             preprocess_lora=preprocess_lora,
@@ -354,8 +363,6 @@ def main():
     for row in summary_rows:
         image_name = row["image"]
         gt_parts = gt_map.get(image_name)
-        if gt_parts is None:
-            raise RuntimeError(f"Missing ground-truth row for {image_name}")
 
         pred_part_map = {part["part"]: part for part in row["parts"]}
         for pred_part_name, pred_part in pred_part_map.items():
