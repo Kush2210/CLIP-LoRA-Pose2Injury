@@ -2,6 +2,8 @@
 
 This project detects human pose keypoints, builds limb-focused Gaussian masks, and classifies limb condition using CLIP + LoRA.
 
+Read notebooks/03_yolo_gaussian_lora_clip.ipynb for the full walkthrough and understand the pipeline.
+
 ## Preview
 
 ![Batch report preview](Results/batch_reports/001_report.jpg)
