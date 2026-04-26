@@ -99,16 +99,6 @@ python analyze_batch_results.py
 
 That prints limb-level accuracy, precision, recall, F1, probability stats, and writes the confusion matrix files.
 
-### 4) Teacher-facing metrics + plots
-
-Prepare/update labels in `testing_labels.csv` (`image,true_label`) and run:
-
-```bash
-python evaluate_teacher_metrics.py \
-  --summary_csv Results/batch_reports/summary.csv \
-  --labels_csv testing_labels.csv \
-  --output_dir Results/report_assets_positive
-```
 
 Outputs are written to:
 
@@ -141,35 +131,4 @@ The focused notebook variants in `notebooks/` are useful for side-by-side compar
   `Limb`, `Predicted Class`, `Binary Label`, `Injury Score`, `No-Injury Prob`.
 
 If you want to compare model behavior, the clearest progression is `01 -> 02 -> 03`.
-
-## Submission Notes
-
-This repo includes `.gitignore` for generated artifacts (`Results/`, `__pycache__/`, notebook checkpoints, etc.) so reruns do not pollute source control.
-
-Generated notebook outputs such as `notebooks/generated_outputs/` and report assets under `Results/` are reproducible and can be regenerated at any time.
-
-For final submission, keep source files and sample inputs; generated outputs are optional unless explicitly requested by your course.
-
-## Troubleshooting
-
-### LoRA checkpoint error
-
-- Confirm the file path passed via `--lora_save_path` (or notebook variable) exists.
-
-### Torch attention compatibility
-
-- `CLIP-LoRA/loralib/layers.py` includes a fallback attention path for environments that do not expose `scaled_dot_product_attention`.
-
-### No person detected
-
-- Try a clearer image, a different crop, or a different limb.
-
-## Minimal Repo Review Checklist
-
-Before submitting:
-
-1. `pip install -r requirements.txt` succeeds.
-2. `python run_pose_then_clip.py --input testing/001.png --mode predict` runs.
-3. `python batch_testing_report.py` runs and writes reports for `DATASET/images`.
-4. `python analyze_batch_results.py` runs and writes the confusion matrix.
-5. README commands match actual file paths in your repo.
+=
